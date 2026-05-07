@@ -1,0 +1,68 @@
+services:
+  media-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gazella-media-service
+    ports:
+      - "3003:3000"
+    environment:
+      - PORT=3000
+      - MINIO_ENDPOINT=minio
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=password123
+      - MINIO_BUCKET_NAME=gazella-media
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - minio
+      - rabbitmq
+    networks:
+      - gazella-network
+
+  minio:
+    image: minio/minio
+    container_name: gazella-minio
+    ports:
+      - "9000:9000" 
+      - "9001:9001" 
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password123
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - gazella-network
+
+  minio-setup:
+    image: minio/mc
+    container_name: gazella-minio-setup
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      mc alias set myminio http://minio:9000 admin password123;
+      mc mb myminio/gazella-media || true;
+      mc anonymous set download myminio/gazella-media;
+      exit 0;
+      "
+    networks:
+      - gazella-network
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: gazella-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - gazella-network
+
+volumes:
+  minio_data: 
+
+networks:
+  gazella-network:
+    driver: bridge
