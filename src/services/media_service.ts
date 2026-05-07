@@ -18,3 +18,12 @@ export const uploadFileToMinio = async (file: Express.Multer.File): Promise<stri
     const baseUrl = `http://${publicHost}:${process.env.MINIO_PORT}`;
     return `${baseUrl}/${bucketName}/${fileName}`;
 };
+
+export const deleteFileFromMinio = async (fileName: string): Promise<void> => {
+    try {
+        await minioClient.removeObject(bucketName, fileName);
+    } catch (error) {
+        console.error(`Error eliminando archivo ${fileName} de MinIO:`, error);
+        throw error;
+    }
+};
