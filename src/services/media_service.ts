@@ -14,6 +14,7 @@ export const uploadFileToMinio = async (file: Express.Multer.File): Promise<stri
         { 'Content-Type': file.mimetype }
     );
 
-    const baseUrl = `http://${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}`;
+    const publicHost = process.env.MINIO_PUBLIC_ENDPOINT || 'localhost';
+    const baseUrl = `http://${publicHost}:${process.env.MINIO_PORT}`;
     return `${baseUrl}/${bucketName}/${fileName}`;
 };
