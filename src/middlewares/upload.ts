@@ -16,7 +16,7 @@ const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCa
     if (allowedMimeTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {
-        cb(new Error('Invalid file type. Only standard images and videos (MP4, WEBM, MOV) are allowed.'));
+        cb(new Error('Invalid file type. Only standard images and videos (PNG, JPEG,, MP4, WEBM, MOV) are allowed.'));
     }
 };
 
