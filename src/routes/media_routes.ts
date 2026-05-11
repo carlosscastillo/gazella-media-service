@@ -2,10 +2,11 @@ import { Router, Request, Response, NextFunction } from 'express';
 import multer from 'multer';
 import { uploadMedia, deleteMedia } from '../controllers/media_controller';
 import { upload } from '../middlewares/upload';
+import { requireAuth } from '../middlewares/auth_validator';
 
 const router = Router();
 
-router.post('/upload', (req: Request, res: Response, next: NextFunction) => {
+router.post('/upload', requireAuth, (req: Request, res: Response, next: NextFunction) => {
     upload.single('file')(req, res, (err) => {
         if (err instanceof multer.MulterError) {
             return res.status(400).json({ 
@@ -18,6 +19,6 @@ router.post('/upload', (req: Request, res: Response, next: NextFunction) => {
     });
 }, uploadMedia);
 
-router.delete('/:fileName', deleteMedia);
+router.delete('/:fileName', requireAuth, deleteMedia);
 
 export default router;
