@@ -6,7 +6,7 @@ import { requireAuth } from '../middlewares/auth_validator';
 
 const router = Router();
 
-router.post('/upload', requireAuth, (req: Request, res: Response, next: NextFunction) => {
+router.post('/', requireAuth, (req: Request, res: Response, next: NextFunction) => {
     upload.single('file')(req, res, (err) => {
         if (err instanceof multer.MulterError) {
             return res.status(400).json({ 
