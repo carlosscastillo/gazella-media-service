@@ -19,7 +19,7 @@ services:
     container_name: gazella-minio
     ports:
       - "9000:9000"
-      - "9001:9001"
+      - "9005:9001"
     env_file:
       - .env
     command: server /data --console-address ":9001"
@@ -29,6 +29,9 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: gazella-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password123
     ports:
       - "5672:5672"
       - "15672:15672"
