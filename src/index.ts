@@ -6,6 +6,7 @@ import mediaRoutes from './routes/media_routes';
 import { connectRabbitMQ } from './messaging/rabbitmq';
 import { errorHandler } from './handlers/error_handler';
 import { swaggerOptions } from './config/swagger';
+import { initMinio } from './config/minio';
 import 'dotenv/config';
 
 const app = express();
@@ -25,9 +26,11 @@ app.use('/media', mediaRoutes);
 
 app.use(errorHandler);
 
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`MediaService corriendo en http://localhost:${port}`);
     console.log(`Documentación disponible en http://localhost:${port}/docs`);
+    
+    await initMinio();
 });
 
 connectRabbitMQ();
