@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   media-service:
     build: .
@@ -10,7 +8,6 @@ services:
       - .env
     depends_on:
       - minio
-      - rabbitmq
     networks:
       - gazella-net
 
@@ -18,23 +15,11 @@ services:
     image: minio/minio
     container_name: gazella-minio
     ports:
-      - "9000:9000"
-      - "9005:9001"
+      - "10000:9000"
+      - "10001:9001"
     env_file:
       - .env
     command: server /data --console-address ":9001"
-    networks:
-      - gazella-net
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: gazella-rabbitmq
-    environment:
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: password123
-    ports:
-      - "5672:5672"
-      - "15672:15672"
     networks:
       - gazella-net
 

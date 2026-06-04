@@ -19,8 +19,8 @@ PORT=3003
 
 MINIO_ENDPOINT=minio
 MINIO_PORT=9000
-MINIO_ACCESS_KEY=admin
-MINIO_SECRET_KEY=password123
+MINIO_ROOT_USER=admin
+MINIO_ROOT_PASSWORD=password123
 MINIO_BUCKET_NAME=gazella-media
 MINIO_PUBLIC_ENDPOINT=localhost
 
@@ -101,9 +101,9 @@ multipart/form-data
 
 Parámetros:
 
-| Campo | Tipo |
-|---|---|
-| file | Archivo |
+| Campo | Tipo    |
+|---    |---      |
+| file  | Archivo |
 
 Ejemplo usando curl:
 
