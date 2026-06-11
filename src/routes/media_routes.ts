@@ -3,6 +3,8 @@ import multer from 'multer';
 import { uploadMedia, deleteMedia } from '../controllers/media_controller';
 import { upload } from '../middlewares/upload';
 import { requireAuth } from '../middlewares/auth_validator';
+import { uploadMiddleware } from '../middlewares/multer';
+import { asyncHandler } from '../handlers/async_handler';
 
 const router = Router();
 
@@ -78,18 +80,7 @@ const router = Router();
  *                   type: string
  *                   example: "Internal server error"
  */
-router.post('/', requireAuth, (req: Request, res: Response, next: NextFunction) => {
-    upload.single('file')(req, res, (err) => {
-        if (err instanceof multer.MulterError) {
-            return res.status(400).json({
-                error: `Upload error: ${err.message}. Please send only one file at a time under the 'file' key.`
-            });
-        } else if (err) {
-            return res.status(400).json({ error: err.message });
-        }
-        next();
-    });
-}, uploadMedia);
+router.post('/', requireAuth, uploadMiddleware, asyncHandler(uploadMedia));
 
 /**
  * @openapi
@@ -154,6 +145,6 @@ router.post('/', requireAuth, (req: Request, res: Response, next: NextFunction) 
  *                   type: string
  *                   example: "Internal server error during deletion"
  */
-router.delete('/:fileName', requireAuth, deleteMedia);
+router.delete('/:fileName', requireAuth, asyncHandler(deleteMedia));
 
 export default router;

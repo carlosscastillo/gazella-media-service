@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { UnauthorizedError } from 'express-jwt';
 import { BaseError } from '../util/error';
 
 export const errorHandler = (
@@ -10,11 +9,13 @@ export const errorHandler = (
 ) => {
     console.error(`[${new Date().toISOString()}] Error: ${err.message}`);
 
-    if (err instanceof UnauthorizedError) {
-        return res.status(401).json({
-            error: 'Unauthorized',
-            message: 'Token inválido o ausente. Debes iniciar sesión para acceder a este recurso.'
+    if (err.name === "UnauthorizedError") {
+        res.status(401).json({
+            error: "Access denied",
+            message: err.message,
+            code: "UNAUTHORIZED"
         });
+        return;
     }
 
     if (err instanceof BaseError) {

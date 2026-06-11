@@ -1,5 +1,5 @@
 import { minioClient, bucketName } from '../config/minio';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 export const uploadFileToMinio = async (file: Express.Multer.File): Promise<string> => {
     const uniqueId = crypto.randomUUID();
@@ -15,7 +15,7 @@ export const uploadFileToMinio = async (file: Express.Multer.File): Promise<stri
     );
 
     const publicHost = process.env.MINIO_PUBLIC_ENDPOINT || 'localhost';
-    const baseUrl = `http://${publicHost}:${process.env.MINIO_PORT}`;
+    const baseUrl = `http://${publicHost}:${process.env.MINIO_PUBLIC_PORT}`;
     return `${baseUrl}/${bucketName}/${fileName}`;
 };
 
